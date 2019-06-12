@@ -1,0 +1,17 @@
+version: '3'
+services:
+  lancache:
+    image: lancachenet/monolithic
+    container_name: "lc-${NAME}cache"
+    ports:
+      - "${IP}:80:80"
+    environment:
+      - UPSTREAM_DNS="8.8.8.8 4.2.2.4"
+      - CACHE_MEM_SIZE=500m
+      - CACHE_DISK_SIZE=1000000m
+      - CACHE_MAX_AGE=3650d
+    volumes:
+      - /cache/${NAME}/logs:/data/logs
+      - /cache/${NAME}/data:/data/cache
+
+    

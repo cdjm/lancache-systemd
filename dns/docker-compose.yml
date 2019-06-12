@@ -1,0 +1,53 @@
+version: '3'
+services:
+  lancache-dns:
+    image: lancachenet/lancache-dns
+    container_name: "lc-dns"
+    network_mode: "host"
+    env_file: /run/lancache/dns
+    ports:
+      - "53:53/udp"
+      - "53:53"
+      #environment:
+      #- LANCACHE_IP=192.168.1.190
+      #- USE_GENERIC_CACHE=true
+      #- RIOTCACHE_IP=192.168.1.191
+      #- DISABLE_STEAM
+    volumes:
+      - /cache/dns/logs:/var/log/named
+
+  lancache-sniproxy:
+    image: lancachenet/sniproxy
+    container_name: "lc-sniproxy"
+    ports:
+      - "443:443"
+
+  #lancache-mono:
+  #  image: lancachenet/monolithic
+  #  container_name: "lc-monocache"
+  #  ports:
+  #    - "192.168.1.190:80:80"
+  #  environment: 
+  #    - UPSTREAM_DNS="8.8.8.8 4.2.2.4"
+  #    - CACHE_MEM_SIZE=500m
+  #    - CACHE_DISK_SIZE=1000000m
+  #    - CACHE_MAX_AGE=3650d
+  #  volumes:
+  #    - /cache/mono/logs:/data/logs
+  #    - /cache/mono/data:/data/cache
+
+#  lancache-riot:
+#    image: lancachenet/monolithic
+#    container_name: "lc-riotcache"
+#    ports:
+#      - "192.168.1.191:80:80"
+#    environment:
+#      - UPSTREAM_DNS="8.8.8.8 4.2.2.4"
+#      - CACHE_MEM_SIZE=500m
+#      - CACHE_DISK_SIZE=1000000m
+#      - CACHE_MAX_AGE=3650d
+#    volumes:
+#      - /cache/riot/logs:/data/logs
+#      - /cache/riot/data:/data/cache
+
+    

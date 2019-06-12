@@ -1,0 +1,29 @@
+[Unit]
+Description=LanCache instance %i
+Requires=docker.service
+After=docker.service
+After=lancache-dns.service
+
+[Service]
+Environment="NAME=%i"
+Restart=always
+WorkingDirectory=/opt/lancache/service
+
+ExecStartPre=/bin/sh -c "/opt/lancache/service/iphelper.sh %i"
+EnvironmentFile=-/run/lancache/%i
+
+# Remove old containers, images and volumes
+ExecStartPre=/usr/bin/docker-compose down -v
+ExecStartPre=/usr/bin/docker-compose rm -fv
+ExecStartPre=-/bin/bash -c 'docker volume ls -qf "name=%i_" | xargs docker volume rm'
+ExecStartPre=-/bin/bash -c 'docker network ls -qf "name=%i_" | xargs docker network rm'
+ExecStartPre=-/bin/bash -c 'docker ps -aqf "name=%i_*" | xargs docker rm'
+
+# Compose up
+ExecStart=/usr/bin/docker-compose up
+
+# Compose down, remove containers and volumes
+ExecStop=/usr/bin/docker-compose down -v
+
+[Install]
+WantedBy=multi-user.target
