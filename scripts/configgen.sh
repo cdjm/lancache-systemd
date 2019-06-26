@@ -11,6 +11,8 @@ instance=${name:3}
 instancedir=${BASEDIR}/${name:3}
 if [ ! -d $instancedir ]; then mkdir $instancedir; fi
 
+mkdir -p /run/lancache
+
 case $name in
   lc-generic)
     echo "GENERIC: cache configured with IP $ip"
